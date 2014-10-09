@@ -37,7 +37,10 @@ func Dial(addr string) (io.WriteCloser, error) {
 		return nil, fmt.Errorf("exconn: cannot accept ip %q as an IPv4 Address", udpAddr.IP)
 	}
 
-	remoteAddr := &syscall.SockaddrInet4{Addr: [4]byte{ip[0], ip[1], ip[2], ip[3]}, Port: udpAddr.Port}
+	ip4 := [4]byte{}
+	copy(ip[0:4], ip4[:])
+
+	remoteAddr := &syscall.SockaddrInet4{Addr: ip4, Port: udpAddr.Port}
 
 	wc := &exconn{
 		fd:         fd,
